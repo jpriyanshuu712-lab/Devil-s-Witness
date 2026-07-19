@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DEVIL'S WITNESS — Justice Doesn't Need Eyes</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="radar-bg"></div>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo-mark" aria-hidden></div>
+      <div class="brand-text">
+        <div class="title">DEVIL'S WITNESS</div>
+        <div class="tag">Justice Doesn't Need Eyes. It Needs Truth.</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="#overview" class="nav-link">Overview</a>
+      <a href="#vault" class="nav-link">Evidence Vault</a>
+      <a href="#custody" class="nav-link">Chain of Custody</a>
+      <a href="#verify" class="nav-link">Verification</a>
+      <a href="#dashboard" class="nav-link">Dashboard</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section id="hero" class="hero">
+      <div class="hero-inner glass">
+        <h1 class="hero-title">DEVIL'S WITNESS</h1>
+        <p class="hero-tagline">Justice Doesn't Need Eyes. It Needs Truth.</p>
+        <p class="hero-desc">Every crime leaves behind evidence. Every piece of evidence tells a story. But stories can be rewritten. Devil's Witness secures digital evidence through cryptographic integrity, ensuring every file remains verifiable, tamper-evident and permanently accountable from collection to courtroom.</p>
+        <div class="hero-actions">
+          <button id="to-vault" class="btn primary">Enter Evidence Vault</button>
+          <button id="to-verify" class="btn ghost">Verify Evidence</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- OVERVIEW -->
+    <section id="overview" class="section">
+      <div class="container">
+        <h2 class="section-title">What is Devil's Witness?</h2>
+        <p class="muted">Digital evidence passes through multiple hands. Each transfer becomes a permanent record. Every evidence receives a cryptographic fingerprint. If anything changes, everyone knows instantly.</p>
+
+        <div class="cards">
+          <div class="card glass hover">
+            <div class="icon icon-evidence"></div>
+            <h3>Evidence Integrity</h3>
+            <p>Records a cryptographic fingerprint for each file without storing the file itself.</p>
+          </div>
+          <div class="card glass hover">
+            <div class="icon icon-lock"></div>
+            <h3>Immutable Audit Trail</h3>
+            <p>Every custody change is recorded, timestamped, and auditable by authorized parties.</p>
+          </div>
+          <div class="card glass hover">
+            <div class="icon icon-shield"></div>
+            <h3>Chain of Custody</h3>
+            <p>Ensure accountability from collection to courtroom with verified transfers and status history.</p>
+          </div>
+          <div class="card glass hover">
+            <div class="icon icon-verify"></div>
+            <h3>Instant Verification</h3>
+            <p>Upload a file and confirm whether the evidence has been altered in seconds.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EVIDENCE VAULT -->
+    <section id="vault" class="section vault">
+      <div class="container split">
+        <div class="panel glass">
+          <h2>Evidence Vault</h2>
+          <p class="muted">Add evidence records to the chain. Files are hashed locally; only fingerprints and metadata are stored.</p>
+
+          <form id="evidence-form">
+            <label>Case Number
+              <input id="caseNumber" required placeholder="e.g. C-2026-004" />
+            </label>
+
+            <label>Evidence ID
+              <input id="evidenceID" required placeholder="Unique Evidence ID" />
+            </label>
+
+            <label>Evidence Type
+              <select id="evidenceType">
+                <option>Digital Photo</option>
+                <option>Video</option>
+                <option>Document</option>
+                <option>Disk Image</option>
+                <option>Other</option>
+              </select>
+            </label>
+
+            <label>Officer / Custodian
+              <input id="officerName" required placeholder="Officer Name" />
+            </label>
+
+            <label>Description
+              <textarea id="description" rows="3" placeholder="Short description"></textarea>
+            </label>
+
+            <label>Upload Evidence File
+              <input id="evidenceFile" type="file" />
+            </label>
+
+            <div class="form-actions">
+              <button type="submit" class="btn primary">Create Evidence Block</button>
+              <button type="button" id="reset-chain" class="btn danger">Reset Ledger</button>
+            </div>
+          </form>
+
+          <div class="status-note" id="statusNote"></div>
+        </div>
+
+        <div class="panel glass">
+          <h3>Recent Evidence Blocks</h3>
+          <div id="blocks" class="blocks-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAIN OF CUSTODY -->
+    <section id="custody" class="section custody">
+      <div class="container">
+        <h2>Chain of Custody</h2>
+        <p class="muted">Every action becomes another record. Transfers, verifications and submissions are preserved as evidence blocks.</p>
+        <div class="timeline glass">
+          <div class="event">Evidence Collected</div>
+          <div class="arrow">↓</div>
+          <div class="event">Uploaded to Vault</div>
+          <div class="arrow">↓</div>
+          <div class="event">Transferred to Forensics</div>
+          <div class="arrow">↓</div>
+          <div class="event">Verified</div>
+          <div class="arrow">↓</div>
+          <div class="event">Submitted to Court</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VERIFICATION -->
+    <section id="verify" class="section verify">
+      <div class="container split">
+        <div class="panel glass">
+          <h2>Verification</h2>
+          <p class="muted">Compare a file's fingerprint to the recorded evidence block.</p>
+
+          <label>Select Evidence File to Verify
+            <input id="verifyFile" type="file" />
+          </label>
+
+          <label>Evidence ID (optional)
+            <input id="verifyEvidenceID" placeholder="Evidence ID to check (recommended)" />
+          </label>
+
+          <div class="form-actions">
+            <button id="verifyBtn" class="btn primary">Verify Evidence</button>
+            <button id="quickScan" class="btn ghost">Quick Scan Latest</button>
+          </div>
+
+          <div id="verifyResult" class="verify-result glass"></div>
+        </div>
+
+        <div class="panel glass">
+          <h3>Blockchain Health</h3>
+          <div class="metrics">
+            <div class="metric">
+              <div class="metric-value" id="countUploaded">0</div>
+              <div class="metric-label">Evidence Uploaded</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value" id="countVerified">0</div>
+              <div class="metric-label">Verified</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value" id="countTampered">0</div>
+              <div class="metric-label">Tampered</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value" id="chainHealth">100%</div>
+              <div class="metric-label">Ledger Health</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="section dashboard">
+      <div class="container">
+        <h2>Dashboard</h2>
+        <div class="dash-cards">
+          <div class="dash-card glass heartbeat">
+            <h4>Evidence Uploaded</h4>
+            <div class="dash-number" id="dashUploaded">0</div>
+          </div>
+          <div class="dash-card glass">
+            <h4>Verified</h4>
+            <div class="dash-number" id="dashVerified">0</div>
+          </div>
+          <div class="dash-card glass pulse">
+            <h4>Tampered</h4>
+            <div class="dash-number" id="dashTampered">0</div>
+          </div>
+          <div class="dash-card glass">
+            <h4>Pending Mining</h4>
+            <div class="dash-number" id="dashPending">0</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer glass">
+    <div>
+      <div class="brand-title">DEVIL'S WITNESS</div>
+      <div class="brand-sub">Justice Doesn't Need Eyes. It Needs Truth.</div>
+    </div>
+    <div class="footer-right">
+      <div>Blockchain Powered Evidence Integrity Platform</div>
+      <div>© 2026 Devil's Witness</div>
+    </div>
+  </footer>
+
+  <div id="msg" class="message"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
