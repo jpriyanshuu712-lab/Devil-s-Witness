@@ -4,34 +4,59 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>DEVIL'S WITNESS — Justice Doesn't Need Eyes</title>
+  <meta name="description" content="Devil's Witness — blockchain-powered evidence integrity platform" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="drd.png" />
 </head>
 <body>
-  <div class="radar-bg"></div>
-  <header class="topbar">
+  <canvas id="bg-canvas" class="bg-canvas" aria-hidden="true"></canvas>
+  <canvas id="radar-canvas" class="radar-canvas" aria-hidden="true"></canvas>
+
+  <div id="loader" class="loader" role="status" aria-live="polite">
+    <div class="loader-inner">
+      <div class="pulse-heart" id="loader-heart"></div>
+      <div class="loader-lines">
+        <div id="loader-line" class="loader-line">Initializing Devil's Witness...</div>
+        <div id="loader-sub" class="loader-sub">Verifying Chain...</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="cursor" class="custom-cursor" aria-hidden="true"></div>
+
+  <header class="topbar glass">
     <div class="brand">
-      <div class="logo-mark" aria-hidden></div>
+      <div class="logo-mark" aria-hidden="true">
+        <img id="brandLogo" class="brand-logo" src="drd.png" alt="DEVIL'S WITNESS logo" />
+        <input id="logoUpload" type="file" accept="image/*" style="display:none" aria-hidden="true" />
+        <!-- Using drd.png as the brand image (user-provided) -->
+      </div>
       <div class="brand-text">
         <div class="title">DEVIL'S WITNESS</div>
         <div class="tag">Justice Doesn't Need Eyes. It Needs Truth.</div>
       </div>
     </div>
+
+    <!-- Live heartbeat line — speed and state change with chain health -->
+    <canvas id="hb-canvas" class="hb-canvas" aria-hidden="true"></canvas>
+
     <nav class="nav">
       <a href="#overview" class="nav-link">Overview</a>
       <a href="#vault" class="nav-link">Evidence Vault</a>
-      <a href="#custody" class="nav-link">Chain of Custody</a>
+      <a href="#trail" class="nav-link">Evidence Trail</a>
+      <a href="#custody" class="nav-link">Custody</a>
       <a href="#verify" class="nav-link">Verification</a>
       <a href="#dashboard" class="nav-link">Dashboard</a>
     </nav>
   </header>
 
   <main>
-    <!-- HERO -->
+    <!-- ═══ HERO ══════════════════════════════════════════════════════════ -->
     <section id="hero" class="hero">
       <div class="hero-inner glass">
         <h1 class="hero-title">DEVIL'S WITNESS</h1>
         <p class="hero-tagline">Justice Doesn't Need Eyes. It Needs Truth.</p>
-        <p class="hero-desc">Every crime leaves behind evidence. Every piece of evidence tells a story. But stories can be rewritten. Devil's Witness secures digital evidence through cryptographic integrity, ensuring every file remains verifiable, tamper-evident and permanently accountable from collection to courtroom.</p>
+        <p class="hero-desc">Every crime leaves behind evidence. Every piece of evidence tells a story. But stories can be rewritten. Devil's Witness ensures they cannot.</p>
         <div class="hero-actions">
           <button id="to-vault" class="btn primary">Enter Evidence Vault</button>
           <button id="to-verify" class="btn ghost">Verify Evidence</button>
@@ -39,11 +64,11 @@
       </div>
     </section>
 
-    <!-- OVERVIEW -->
+    <!-- ═══ OVERVIEW ═════════════════════════════════════════════════════ -->
     <section id="overview" class="section">
       <div class="container">
         <h2 class="section-title">What is Devil's Witness?</h2>
-        <p class="muted">Digital evidence passes through multiple hands. Each transfer becomes a permanent record. Every evidence receives a cryptographic fingerprint. If anything changes, everyone knows instantly.</p>
+        <p class="muted">Digital evidence passes through multiple hands — police, forensic labs, investigators, lawyers, courts. Each transfer becomes a record. Each file receives a cryptographic fingerprint. If anything changes, everyone knows instantly.</p>
 
         <div class="cards">
           <div class="card glass hover">
@@ -70,14 +95,14 @@
       </div>
     </section>
 
-    <!-- EVIDENCE VAULT -->
+    <!-- ═══ EVIDENCE VAULT ════════════════════════════════════════════════ -->
     <section id="vault" class="section vault">
       <div class="container split">
-        <div class="panel glass">
+        <div class="panel glass vault-panel">
           <h2>Evidence Vault</h2>
-          <p class="muted">Add evidence records to the chain. Files are hashed locally; only fingerprints and metadata are stored.</p>
+          <p class="muted">Add evidence records. Files are hashed locally; only fingerprints and metadata are retained. <strong style="color:#ff4a5a">Editing any block changes its hash and marks all subsequent blocks INVALID.</strong></p>
 
-          <form id="evidence-form">
+          <form id="evidence-form" class="evidence-form">
             <label>Case Number
               <input id="caseNumber" required placeholder="e.g. C-2026-004" />
             </label>
@@ -104,8 +129,9 @@
               <textarea id="description" rows="3" placeholder="Short description"></textarea>
             </label>
 
-            <label>Upload Evidence File
+            <label class="file-drop" id="file-drop">Upload Evidence File
               <input id="evidenceFile" type="file" />
+              <div class="drop-hint">Drag &amp; Drop or click to browse</div>
             </label>
 
             <div class="form-actions">
@@ -113,22 +139,71 @@
               <button type="button" id="reset-chain" class="btn danger">Reset Ledger</button>
             </div>
           </form>
-
-          <div class="status-note" id="statusNote"></div>
         </div>
 
         <div class="panel glass">
           <h3>Recent Evidence Blocks</h3>
-          <div id="blocks" class="blocks-list"></div>
+          <p class="muted" id="vaultChainHealth" style="font-size:12px;margin-bottom:10px;">Vault Integrity: 100%</p>
+          <div id="blocks" class="blocks-list" aria-live="polite"></div>
         </div>
       </div>
     </section>
 
-    <!-- CHAIN OF CUSTODY -->
+    <!-- ═══ EVIDENCE TRAIL BLOCKCHAIN ════════════════════════════════════ -->
+    <section id="trail" class="section trail-section">
+      <div class="container">
+        <h2 class="section-title">Evidence Trail Blockchain</h2>
+        <p class="muted">Track the full chain of custody for any evidence item. Every transfer from person to person is a cryptographically sealed block. <strong style="color:#ff4a5a">Edit any trail entry and the hash changes — all subsequent blocks go INVALID and display "Truth was changed."</strong></p>
+
+        <div class="split">
+          <!-- Trail Form -->
+          <div class="panel glass">
+            <h3>Add Trail Entry</h3>
+            <p class="muted">Record who passed evidence to whom. Multiple entries per evidence ID are supported.</p>
+            <form id="trail-form" class="evidence-form">
+              <label>Evidence ID
+                <input id="trailEvidenceID" required placeholder="Evidence ID (e.g. EV-001)" />
+              </label>
+              <label>Trail Action
+                <select id="trailAction">
+                  <option>Collected</option>
+                  <option>Transferred</option>
+                  <option>Verified</option>
+                  <option>Submitted</option>
+                  <option>Archived</option>
+                </select>
+              </label>
+              <label>From Person / Agency
+                <input id="trailFrom" required placeholder="e.g. Officer Smith" />
+              </label>
+              <label>To Person / Agency
+                <input id="trailTo" required placeholder="e.g. Forensics Lab" />
+              </label>
+              <label>Notes
+                <textarea id="trailNotes" rows="3" placeholder="Event details, location, conditions…"></textarea>
+              </label>
+              <div class="form-actions">
+                <button type="submit" class="btn primary">Add Trail Block</button>
+              </div>
+            </form>
+            <div class="status-note" id="trailStatus"></div>
+          </div>
+
+          <!-- Trail Blockchain Display -->
+          <div class="panel glass">
+            <h3>Trail Blockchain</h3>
+            <p class="muted" id="trailChainHealth">Trail Chain Integrity: 100%</p>
+            <div id="trail-blocks" class="blocks-list" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CHAIN OF CUSTODY ══════════════════════════════════════════════ -->
     <section id="custody" class="section custody">
       <div class="container">
         <h2>Chain of Custody</h2>
-        <p class="muted">Every action becomes another record. Transfers, verifications and submissions are preserved as evidence blocks.</p>
+        <p class="muted">Transfers, verifications and submissions are preserved as evidence blocks.</p>
         <div class="timeline glass">
           <div class="event">Evidence Collected</div>
           <div class="arrow">↓</div>
@@ -143,7 +218,7 @@
       </div>
     </section>
 
-    <!-- VERIFICATION -->
+    <!-- ═══ VERIFICATION ══════════════════════════════════════════════════ -->
     <section id="verify" class="section verify">
       <div class="container split">
         <div class="panel glass">
@@ -163,7 +238,7 @@
             <button id="quickScan" class="btn ghost">Quick Scan Latest</button>
           </div>
 
-          <div id="verifyResult" class="verify-result glass"></div>
+          <div id="verifyResult" class="verify-result glass" aria-live="polite"></div>
         </div>
 
         <div class="panel glass">
@@ -190,7 +265,7 @@
       </div>
     </section>
 
-    <!-- DASHBOARD -->
+    <!-- ═══ DASHBOARD ═════════════════════════════════════════════════════ -->
     <section id="dashboard" class="section dashboard">
       <div class="container">
         <h2>Dashboard</h2>
@@ -214,7 +289,6 @@
         </div>
       </div>
     </section>
-
   </main>
 
   <footer class="footer glass">
@@ -228,7 +302,89 @@
     </div>
   </footer>
 
-  <div id="msg" class="message"></div>
+  <!-- ═══ EVIDENCE EDIT MODAL ══════════════════════════════════════════ -->
+  <div id="editModal" class="modal" aria-hidden="true">
+    <div class="modal-panel glass">
+      <div class="modal-header">
+        <div>
+          <h3>Edit Evidence Block</h3>
+          <p class="muted" style="color:#ff9090;">⚠ Editing changes the block hash and invalidates all subsequent blocks.</p>
+        </div>
+        <button id="closeModal" class="modal-close" aria-label="Close edit modal">&times;</button>
+      </div>
+      <form id="edit-form">
+        <input type="hidden" id="editIndex" />
+        <label>Case Number
+          <input id="editCaseNumber" required />
+        </label>
+        <label>Evidence ID
+          <input id="editEvidenceID" required />
+        </label>
+        <label>Evidence Type
+          <select id="editEvidenceType">
+            <option>Digital Photo</option>
+            <option>Video</option>
+            <option>Document</option>
+            <option>Disk Image</option>
+            <option>Other</option>
+          </select>
+        </label>
+        <label>Officer / Custodian
+          <input id="editOfficerName" required />
+        </label>
+        <label>Description
+          <textarea id="editDescription" rows="3"></textarea>
+        </label>
+        <div class="form-actions modal-actions">
+          <button type="submit" class="btn primary">Save Changes</button>
+          <button type="button" id="cancelEdit" class="btn ghost">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══ TRAIL EDIT MODAL ═════════════════════════════════════════════ -->
+  <div id="trailEditModal" class="modal" aria-hidden="true">
+    <div class="modal-panel glass">
+      <div class="modal-header">
+        <div>
+          <h3>Edit Trail Block</h3>
+          <p class="muted" style="color:#ff9090;">⚠ Editing changes the trail hash — all subsequent trail blocks show <strong>INVALID — Truth was changed.</strong></p>
+        </div>
+        <button id="closeTrailModal" class="modal-close" aria-label="Close trail edit modal">&times;</button>
+      </div>
+      <form id="trail-edit-form">
+        <input type="hidden" id="trailEditIndex" />
+        <label>Evidence ID
+          <input id="trailEditEvidenceID" required />
+        </label>
+        <label>Trail Action
+          <select id="trailEditAction">
+            <option>Collected</option>
+            <option>Transferred</option>
+            <option>Verified</option>
+            <option>Submitted</option>
+            <option>Archived</option>
+          </select>
+        </label>
+        <label>From Person / Agency
+          <input id="trailEditFrom" required />
+        </label>
+        <label>To Person / Agency
+          <input id="trailEditTo" required />
+        </label>
+        <label>Notes
+          <textarea id="trailEditNotes" rows="3"></textarea>
+        </label>
+        <div class="form-actions modal-actions">
+          <button type="submit" class="btn primary">Save Trail Changes</button>
+          <button type="button" id="cancelTrailEdit" class="btn ghost">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="msg" class="message" aria-live="polite"></div>
 
   <script src="script.js"></script>
 </body>
