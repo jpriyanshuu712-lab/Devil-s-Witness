@@ -11,6 +11,14 @@
 <body>
   <canvas id="bg-canvas" class="bg-canvas" aria-hidden="true"></canvas>
   <canvas id="radar-canvas" class="radar-canvas" aria-hidden="true"></canvas>
+  <canvas id="city-canvas" aria-hidden="true"></canvas>
+  <canvas id="neural-canvas" aria-hidden="true"></canvas>
+  <canvas id="fog-canvas" aria-hidden="true"></canvas>
+  <canvas id="rain-canvas" aria-hidden="true"></canvas>
+  <canvas id="ember-canvas" aria-hidden="true"></canvas>
+  <canvas id="float-canvas" aria-hidden="true"></canvas>
+  <canvas id="sonar-hero-canvas" aria-hidden="true"></canvas>
+  <div id="lightning-overlay" aria-hidden="true"></div>
 
   <div id="loader" class="loader" role="status" aria-live="polite">
     <div class="loader-inner">
@@ -72,22 +80,45 @@
 
         <div class="cards">
           <div class="card glass hover">
-            <div class="icon icon-evidence"></div>
+            <div class="icon icon-evidence" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M7 3h8l4 4v14H7z"></path>
+                <path d="M15 3v4h4"></path>
+                <path d="M10 11h6"></path>
+                <path d="M10 15h4"></path>
+              </svg>
+            </div>
             <h3>Evidence Integrity</h3>
             <p>Records a cryptographic fingerprint for each file without storing the file itself.</p>
           </div>
           <div class="card glass hover">
-            <div class="icon icon-lock"></div>
+            <div class="icon icon-lock" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="5" y="10" width="14" height="10" rx="2"></rect>
+                <path d="M8 10V8a4 4 0 1 1 8 0v2"></path>
+                <path d="M12 14v2"></path>
+              </svg>
+            </div>
             <h3>Immutable Audit Trail</h3>
             <p>Every custody change is recorded, timestamped, and auditable by authorized parties.</p>
           </div>
           <div class="card glass hover">
-            <div class="icon icon-shield"></div>
+            <div class="icon icon-shield" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 3l7 3v5c0 4.8-2.6 7.8-7 10-4.4-2.2-7-5.2-7-10V6l7-3z"></path>
+                <path d="M9.5 12.5l1.7 1.7 3.3-3.4"></path>
+              </svg>
+            </div>
             <h3>Chain of Custody</h3>
             <p>Ensure accountability from collection to courtroom with verified transfers and status history.</p>
           </div>
           <div class="card glass hover">
-            <div class="icon icon-verify"></div>
+            <div class="icon icon-verify" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M8.5 12.5l2.3 2.3 4.7-4.8"></path>
+              </svg>
+            </div>
             <h3>Instant Verification</h3>
             <p>Upload a file and confirm whether the evidence has been altered in seconds.</p>
           </div>
